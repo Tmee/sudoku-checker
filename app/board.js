@@ -3,7 +3,6 @@ $(function() {
     var $game            = $('.game');
     var $board           = $game.find('.board');
     var $emptyBoardCells = $board.find('.cell.empty');
-    var $boardCells = $board.find('.cell.empty');
     var $selected        = $([]);
 
     $(document.body).bind('click', function() {
@@ -12,40 +11,16 @@ $(function() {
         }
     });
 
-    $emptyBoardCells.click(function(e) {
+    $emptyBoardCells.click( function(e) {
         if ($selected.length > 0) {
           console.log($selected);
           closeCellInput($selected);
         }
 
-        $cell = $(this);
         editCell($(this));
 
         return;
     });
-
-    // $emptyBoardCells.on('keydown', function(e) {
-
-    //     var $this = $(this);
-    //     var $cell = $this.closest('.cell');
-
-    //     e.preventDefault();
-    //     e.stopPropagation();
-
-    //     // ENTER, ESC
-    //     if (e.keyCode == 13 || e.keyCode == 27) {
-    //         closeCellInput($cell);
-
-    //         return;
-    //     }
-    //     // digits between 1-9
-    //     if (e.keyCode >= 49 && e.keyCode <= 57) {
-    //         var number = e.keyCode-48;
-    //         $cell.find('input').val(number);
-    //     }
-
-    //     return;
-    // });
 
     function editCell($cell) {
       $cell.click(function() {
@@ -55,12 +30,12 @@ $(function() {
         $(this).children().first().focus();
         $(this).children().first().keypress(function(e) {
           if (e.which == 13) {
+            closeCellInput($(this))
             e.preventDefault();
-            console.log(newNum)
-            console.log(OriginalNumber)
             var newNum = $(this).val();
             $(this).parent().text(newNum);
-            $(this).parent().removeClass("cellEditing");
+            $cell.removeClass("cellEditing");
+            closeCellInput($cell)
           }
         });
         $(this).children().first().blur(function() {
@@ -71,11 +46,10 @@ $(function() {
     };
 
     function closeCellInput($cell) {
-        var index     = $boardCells.index($cell);
-        var number    = $cell.find('input').val();
-        var complete  = false;
-
-        $cell.empty().removeClass('empty').removeClass('solved').attr('style', null);
+      var text = $cell.text()
+      if ($.isNumeric(text)) {
+        $cell.removeClass('empty')
         $selected = $([]);
+      }
     }
 });
