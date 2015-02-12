@@ -5,26 +5,14 @@ $(function() {
     var $boardCells      = $board.find('.cell');
     var $selected        = $([]);
     var board            = null;
-    var highlighted      = null;
-    var counters         = null;
-    var templates        = null;
-    var gameLoaderHandle = null;
 
     $(document.body).bind('click', function() {
-        if ($selected.length > 0) {
-            closeCellInput($selected);
-        }
-
         if ($selected.length > 0) {
             closeCellInput($selected);
         }
     });
 
     $board.delegate('.cell.empty', 'click', function(e) {
-        if ($game.hasClass('running') == false) {
-            return false;
-        }
-
         e.preventDefault();
         e.stopPropagation();
 
@@ -34,8 +22,6 @@ $(function() {
 
         $selected = $(this);
         $selected.html('<input type="text"/>').find('input').focus();
-
-        highlightCells(null);
 
         return;
     });
@@ -66,7 +52,6 @@ $(function() {
     $board.delegate('.cell.solved', 'click', handleHighlightTrigger);
     });
 
-
     function editCell() {
         $(".cell").click(function() {
             var OriginalNumber = $(this).text();
@@ -87,53 +72,16 @@ $(function() {
         });
     };
 
-
     function closeCellInput($cell) {
         var index     = $boardCells.index($cell);
-        var target    = board.solution[index]+1;
         var number    = $cell.find('input').val();
         var complete  = false;
 
         $cell.empty().removeClass('empty').removeClass('solved').attr('style', null);
-
-        if (number == target) {
-            $cell.text(number).addClass('solved');
-            counters[number]++;
-            highlightCells(number);
-            udpateLegend();
-
-            complete = checkComplete();
-        }
-        else if (number != '') {
-            var cell      = $cell[0];
-            var animator  = new Animator({duration:750});
-            var animation = new ColorStyleSubject(cell, "background-color", "#FF8888", "#FFFFFF");
-
-            $cell.text('').addClass('empty');
-            animator.addSubject(animation).play();
-        }
-        else {
-            $cell.text('').addClass('empty');
-        }
-
         $selected = $([]);
-
-        if (complete) {
-            highlightCells(null);
-            setGameStateClass('complete');
-
-            $menu.data('config', {});
-            $menu.data('state', 'complete-singleplayer');
-            $menu.data('salutation', 'well done!');
-            showMenu();
-        }
     }
 
     function handleHighlightTrigger(e) {
-        if ($game.hasClass('running') == false) {
-            return false;
-        }
-
         e.preventDefault();
 
         if ($selected.length > 0) {
