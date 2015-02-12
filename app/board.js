@@ -4,7 +4,6 @@ $(function() {
     var $board           = $game.find('.board');
     var $boardCells      = $board.find('.cell');
     var $selected        = $([]);
-    var board            = null;
 
     $(document.body).bind('click', function() {
         if ($selected.length > 0) {
@@ -12,7 +11,7 @@ $(function() {
         }
     });
 
-    $board.delegate('.cell.empty', 'click', function(e) {
+    $board.on('.cell.empty', 'click', function(e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -26,7 +25,7 @@ $(function() {
         return;
     });
 
-    $board.delegate('.cell.empty', 'keydown', function(e) {
+    $board.on('.cell.empty', 'keydown', function(e) {
 
         var $this = $(this);
         var $cell = $this.closest('.cell');
@@ -49,7 +48,7 @@ $(function() {
         return;
     });
 
-    $board.delegate('.cell.solved', 'click', handleHighlightTrigger);
+    $board.on('.cell.solved', 'click', handleHighlightTrigger);
     });
 
     function editCell() {
