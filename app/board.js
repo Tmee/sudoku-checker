@@ -2,7 +2,8 @@ $(function() {
     var undefined;
     var $game            = $('.game');
     var $board           = $game.find('.board');
-    var $boardCells      = $board.find('.cell');
+    var $emptyBoardCells = $board.find('.cell.empty');
+    var $boardCells = $board.find('.cell.empty');
     var $selected        = $([]);
 
     $(document.body).bind('click', function() {
@@ -11,60 +12,62 @@ $(function() {
         }
     });
 
-    $boardCells.click( function() {
-      $(this).html('<input type="text"/>').find('input').focus();
-    })
-
-    $board.on('.cell.empty', 'click', function(e) {
+    $emptyBoardCells.click(function(e) {
         if ($selected.length > 0) {
           console.log($selected);
           closeCellInput($selected);
         }
 
-        $selected = $(this);
-        $selected.html('<input type="text"/>').find('input').focus();
+        $cell = $(this);
+        editCell($(this));
 
         return;
     });
 
-    $board.on('.cell.empty', 'keydown', function(e) {
+    // $emptyBoardCells.on('keydown', function(e) {
 
-        var $this = $(this);
-        var $cell = $this.closest('.cell');
+    //     var $this = $(this);
+    //     var $cell = $this.closest('.cell');
 
-        // ENTER, ESC
-        if (e.keyCode == 13 || e.keyCode == 27) {
-            closeCellInput($cell);
+    //     e.preventDefault();
+    //     e.stopPropagation();
 
-            return;
-        }
-        // digits between 1-9
-        if (e.keyCode >= 49 && e.keyCode <= 57) {
-            var number = e.keyCode-48;
-            $cell.find('input').val(number);
-        }
+    //     // ENTER, ESC
+    //     if (e.keyCode == 13 || e.keyCode == 27) {
+    //         closeCellInput($cell);
 
-        return;
-    });
+    //         return;
+    //     }
+    //     // digits between 1-9
+    //     if (e.keyCode >= 49 && e.keyCode <= 57) {
+    //         var number = e.keyCode-48;
+    //         $cell.find('input').val(number);
+    //     }
 
-    function editCell() {
-        $(".cell").click(function() {
-            var OriginalNumber = $(this).text();
-            $(this).addClass("cellEditing");
-            $(this).html("<input type='text' style='font-size: 150%;width: 20px; height: 30px;'/>");
-            $(this).children().first().focus();
-            $(this).children().first().keypress(function(e) {
-                if (e.which == 13) {
-                    var newContent = $(this).val();
-                    $(this).parent().text(newContent);
-                    $(this).parent().removeClass("cellEditing");
-                }
-            });
-            $(this).children().first().blur(function() {
-                $(this).parent().text(OriginalContent);
-                $(this).parent().removeClass("cellEditing");
-            });
+    //     return;
+    // });
+
+    function editCell($cell) {
+      $cell.click(function() {
+        var OriginalNumber = $(this).text();
+        $(this).addClass("cellEditing");
+        $(this).html("<input type='text''/>");
+        $(this).children().first().focus();
+        $(this).children().first().keypress(function(e) {
+          if (e.which == 13) {
+            e.preventDefault();
+            console.log(newNum)
+            console.log(OriginalNumber)
+            var newNum = $(this).val();
+            $(this).parent().text(newNum);
+            $(this).parent().removeClass("cellEditing");
+          }
         });
+        $(this).children().first().blur(function() {
+          $(this).parent().text(OriginalNumber);
+          $(this).parent().removeClass("cellEditing");
+        });
+      });
     };
 
     function closeCellInput($cell) {
