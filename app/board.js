@@ -2,150 +2,105 @@ $(function() {
     var undefined;
     var $game            = $('.game');
     var $board           = $game.find('.board');
-    var $boardCells      = $board.find('.cell');
     var $selected        = $([]);
-    var board            = null;
-    var highlighted      = null;
-    var counters         = null;
-    var templates        = null;
-    var gameLoaderHandle = null;
-
-    $(document.body).bind('click', function() {
-        if ($selected.length > 0) {
-            closeCellInput($selected);
-        }
-
-        if ($selected.length > 0) {
-            closeCellInput($selected);
-        }
-    });
-
-    $board.delegate('.cell.empty', 'click', function(e) {
-        if ($game.hasClass('running') == false) {
-            return false;
-        }
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        if ($selected.length > 0) {
-            closeCellInput($selected);
-        }
-
-        $selected = $(this);
-        $selected.html('<input type="text"/>').find('input').focus();
-
-        highlightCells(null);
-
-        return;
-    });
-
-    $board.delegate('.cell.empty', 'keydown', function(e) {
-
-        var $this = $(this);
-        var $cell = $this.closest('.cell');
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        // ENTER, ESC
-        if (e.keyCode == 13 || e.keyCode == 27) {
-            closeCellInput($cell);
-
-            return;
-        }
-        // digits between 1-9
-        else if (e.keyCode >= 49 && e.keyCode <= 57) {
-            var number = e.keyCode-48;
-            $cell.find('input').val(number);
-        }
-
-        return;
-    });
-
-    $board.delegate('.cell.solved', 'click', handleHighlightTrigger);
-    });
+    var expectedBoard = [[0,9,0,0,0,0,0,0,6],
+                        [0,0,0,9,6,0,4,8,5],
+                        [0,0,0,5,8,1,0,0,0],
+                        [0,0,4,0,0,0,0,0,0],
+                        [5,1,7,2,0,0,9,0,0],
+                        [6,0,2,0,0,0,3,7,0],
+                        [1,0,0,8,0,4,0,2,0],
+                        [7,0,6,0,0,0,8,1,0],
+                        [3,0,0,0,9,0,0,0,0]
+                      ];
 
 
-    function editCell() {
-        $(".cell").click(function() {
-            var OriginalNumber = $(this).text();
-            $(this).addClass("cellEditing");
-            $(this).html("<input type='text' style='font-size: 150%;width: 20px; height: 30px;'/>");
-            $(this).children().first().focus();
-            $(this).children().first().keypress(function(e) {
-                if (e.which == 13) {
-                    var newContent = $(this).val();
-                    $(this).parent().text(newContent);
-                    $(this).parent().removeClass("cellEditing");
-                }
-            });
-            $(this).children().first().blur(function() {
-                $(this).parent().text(OriginalContent);
-                $(this).parent().removeClass("cellEditing");
-            });
-        });
-    };
-
-
-    function closeCellInput($cell) {
-        var index     = $boardCells.index($cell);
-        var target    = board.solution[index]+1;
-        var number    = $cell.find('input').val();
-        var complete  = false;
-
-        $cell.empty().removeClass('empty').removeClass('solved').attr('style', null);
-
-        if (number == target) {
-            $cell.text(number).addClass('solved');
-            counters[number]++;
-            highlightCells(number);
-            udpateLegend();
-
-            complete = checkComplete();
-        }
-        else if (number != '') {
-            var cell      = $cell[0];
-            var animator  = new Animator({duration:750});
-            var animation = new ColorStyleSubject(cell, "background-color", "#FF8888", "#FFFFFF");
-
-            $cell.text('').addClass('empty');
-            animator.addSubject(animation).play();
+    // Create the board
+    $('.row').each(function (rowIndex, row) {
+      $(this).find('.cell').each(function (cellIndex, cell) {
+        var cellValue = expectedBoard[rowIndex][cellIndex];
+        if (cellValue) {
+          $(this).text(cellValue);
+          $(this).addClass('set');
         }
         else {
-            $cell.text('').addClass('empty');
+          $(this).addClass('empty');
         }
+      });
+    });
+    //  finish board
 
-        $selected = $([]);
+    function makeAnswersArray(board) {
+      var answerArray = [
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0]
+      ];
+      $('.row').each(function (rowIndex, row) {
+        $(this).find('.cell').each(function (cellIndex, cell) {
+          var cellValue = parseInt($(this).text());
+          if (!cellValue) { cellValue = 0 }
+          answerArray[rowIndex][cellIndex] = cellValue
+        });
+      });
+      return answerArray
+    };
 
-        if (complete) {
-            highlightCells(null);
-            setGameStateClass('complete');
+    var $emptyBoardCells = $board.find('.cell.empty');
+    $emptyBoardCells.click( function(e) {
+        editCell($(this));
+        return;
+    });
 
-            $menu.data('config', {});
-            $menu.data('state', 'complete-singleplayer');
-            $menu.data('salutation', 'well done!');
-            showMenu();
-        }
+    var reset = function () {
+      $('.row').each(function (rowIndex, row) {
+        $(this).find('.cell').each(function (cellIndex, cell) {
+          var cellValue = expectedBoard[rowIndex][cellIndex];
+          if (cellValue) {
+            $(this).text(cellValue);
+            $(this).addClass('set');
+          }
+          else {
+            $(this).addClass('empty');
+          }
+        });
+      });
     }
 
-    function handleHighlightTrigger(e) {
-        if ($game.hasClass('running') == false) {
-            return false;
-        }
+    function editCell($cell) {
+      $cell.click(function() {
+        var OriginalNumber = $(this).text();
+        $(this).addClass("cellEditing");
+        $(this).html("<input type='text''/>");
+        $(this).children().first().focus();
+        $(this).children().first().keypress(function(e) {
+          if (e.which == 13) {
+            closeCellInput($(this))
+            e.preventDefault();
+            var newNum = $(this).val();
+            $(this).parent().text(newNum);
+            $cell.removeClass("cellEditing");
+            closeCellInput($cell)
+          }
+        });
+        $(this).children().first().blur(function() {
+          $(this).parent().text(OriginalNumber);
+          $(this).parent().removeClass("cellEditing");
+        });
+      });
+    };
 
-        e.preventDefault();
-
-        if ($selected.length > 0) {
-            closeCellInput($selected);
-        }
-
-        var $this  = $(this);
-        var number = $this.text();
-
-        $selected.empty();
+    function closeCellInput($cell) {
+      var text = $cell.text()
+      if ($.isNumeric(text)) {
+        $cell.removeClass('empty')
         $selected = $([]);
-
-        return;
+      }
     }
 });
