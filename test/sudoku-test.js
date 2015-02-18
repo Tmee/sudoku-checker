@@ -53,14 +53,14 @@ test('should save all of the empty positions of board', function() {
 test('check row for values', function(assert) {
 
   assert.ok(checkRow(expectedBoard, 0, 2));
-  deepEqual([0, 1], checkRow(expectedBoard, 0, 9));
+  assert.equal(false, checkRow(expectedBoard, 0, 9));
 
 });
 
 test('check column for values', function(assert) {
 
   assert.ok(checkColumn(expectedBoard, 0, 9));
-  deepEqual([0, 4], checkColumn(expectedBoard, 0, 5));
+  assert.equal(false, checkColumn(expectedBoard, 0, 5));
 
 });
 
@@ -68,8 +68,18 @@ test('check 3x3 values do not match', function(assert) {
 
   assert.ok(checkSquare(expectedBoard, 2, 2, 1));
   assert.ok(checkSquare(expectedBoard, 7, 7, 9));
-  deepEqual([0, 1], checkSquare(expectedBoard, 2, 2, 9));
-  deepEqual([6, 7], checkSquare(expectedBoard, 7, 7, 2));
+  assert.equal(false, checkSquare(expectedBoard, 2, 2, 9));
+  assert.equal(false, checkSquare(expectedBoard, 7, 7, 2));
 
 });
+
+test('check values valid for position', function(assert) {
+
+  assert.ok(checkValue(expectedBoard, 0, 0, 2));
+  assert.ok(checkValue(expectedBoard, 3, 7, 3));
+  assert.equal(false, checkValue(expectedBoard, 0, 0, 9));
+  assert.equal(false, checkValue(expectedBoard, 3, 7, 1));
+
+});
+
 
