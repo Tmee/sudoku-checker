@@ -1,4 +1,4 @@
-$(function() {
+  $(function() {
     var undefined;
     var $game            = $('.game');
     var $board           = $game.find('.board');
@@ -11,14 +11,13 @@ $(function() {
         }
     });
 
-    $emptyBoardCells.click( function(e) {
+    $emptyBoardCells.click( function( ) {
         if ($selected.length > 0) {
           console.log($selected);
           closeCellInput($selected);
         }
 
         editCell($(this));
-
         return;
     });
 
