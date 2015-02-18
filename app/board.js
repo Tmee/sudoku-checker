@@ -9,16 +9,33 @@ $(function() {
     var counters         = null;
     var templates        = null;
     var gameLoaderHandle = null;
+    var board = '090000006\n' +
+              '000960485\n' +
+              '000581000\n' +
+              '004000000\n' +
+              '517200900\n' +
+              '602000370\n' +
+              '100804020\n' +
+              '706000810\n' +
+              '300090000';
+    var @parsedBoard = parseBoard(board);
+
+
+
 
     $(document.body).bind('click', function() {
         if ($selected.length > 0) {
             closeCellInput($selected);
         }
-
-        if ($selected.length > 0) {
-            closeCellInput($selected);
-        }
     });
+
+    function parseBoard(board) {
+      return board.split('\n').map(function(row) {
+        return row.split('').map(function(num) {
+          return +num;
+        });
+      });
+    };
 
     $board.delegate('.cell.empty', 'click', function(e) {
         if ($game.hasClass('running') == false) {
