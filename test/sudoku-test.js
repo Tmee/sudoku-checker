@@ -53,14 +53,14 @@ test('should save all of the empty positions of board', function() {
 test('check row for values', function(assert) {
 
   assert.ok(checkRow(expectedBoard, 0, 2));
-  assert.equal(1, checkRow(expectedBoard, 0, 9));
+  deepEqual([0, 1], checkRow(expectedBoard, 0, 9));
 
 });
 
 test('check column for values', function(assert) {
 
   assert.ok(checkColumn(expectedBoard, 0, 9));
-  assert.equal(4, checkColumn(expectedBoard, 0, 5));
+  deepEqual([0, 4], checkColumn(expectedBoard, 0, 5));
 
 });
 
