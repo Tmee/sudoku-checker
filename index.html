@@ -12,18 +12,7 @@
   <body>
     <div class="game">
       <div class="board">
-        <div class="row" id="rowA">
-          <div class="cell empty"></div>
-          <div class="cell"></div>
-          <div class="cell"></div>
-          <div class="cell"></div>
-          <div class="cell"></div>
-          <div class="cell"></div>
-          <div class="cell"></div>
-          <div class="cell"></div>
-          <div class="cell"></div>
-        </div>
-        <div class="row" id="rowB">
+        <div class="row" id="1">
           <div class="cell"></div>
           <div class="cell"></div>
           <div class="cell"></div>
@@ -34,7 +23,7 @@
           <div class="cell"></div>
           <div class="cell"></div>
         </div>
-        <div class="row" id="rowC">
+        <div class="row" id="2">
           <div class="cell"></div>
           <div class="cell"></div>
           <div class="cell"></div>
@@ -45,7 +34,7 @@
           <div class="cell"></div>
           <div class="cell"></div>
         </div>
-        <div class="row" id="rowD">
+        <div class="row" id="3">
           <div class="cell"></div>
           <div class="cell"></div>
           <div class="cell"></div>
@@ -56,7 +45,7 @@
           <div class="cell"></div>
           <div class="cell"></div>
         </div>
-        <div class="row" id="rowE">
+        <div class="row" id="4">
           <div class="cell"></div>
           <div class="cell"></div>
           <div class="cell"></div>
@@ -67,7 +56,7 @@
           <div class="cell"></div>
           <div class="cell"></div>
         </div>
-        <div class="row" id="rowF">
+        <div class="row" id="row5">
           <div class="cell"></div>
           <div class="cell"></div>
           <div class="cell"></div>
@@ -78,7 +67,7 @@
           <div class="cell"></div>
           <div class="cell"></div>
         </div>
-        <div class="row" id="rowG">
+        <div class="row" id="6">
           <div class="cell"></div>
           <div class="cell"></div>
           <div class="cell"></div>
@@ -89,7 +78,7 @@
           <div class="cell"></div>
           <div class="cell"></div>
         </div>
-        <div class="row" id="rowH">
+        <div class="row" id="7">
           <div class="cell"></div>
           <div class="cell"></div>
           <div class="cell"></div>
@@ -100,7 +89,18 @@
           <div class="cell"></div>
           <div class="cell"></div>
         </div>
-        <div class="row" id="rowI">
+        <div class="row" id="8">
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+          <div class="cell"></div>
+        </div>
+        <div class="row" id="9">
           <div class="cell"></div>
           <div class="cell"></div>
           <div class="cell"></div>
@@ -115,9 +115,6 @@
 
       <script type="text/javascript">
         $( document ).ready( function() {
-          $('#validate').click( function () {
-            compareBoards(correctBoard, makeAnswerArray());
-          });
           $( '#reset').click( function() {
             board.reset();
           } );
@@ -125,7 +122,6 @@
       </script>
       <div class="legend">
         <div class="row">
-          <button id="validate">Check Answers</button>
           <button id="reset">Reset</button>
         </div>
       </div>
