@@ -63,5 +63,3 @@ test('check values valid for position', function(assert) {
   assert.equal(false, checkValue(expectedBoard, 3, 7, 1));
 
 });
-
-
