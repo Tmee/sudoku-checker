@@ -10,7 +10,15 @@ strong {
 }
 
 .incorrect {
-  background-color: light-red;
+    color: red;
+}
+
+.empty {
+    color:#333333;
+}
+
+.set {
+    color:#333333;
 }
 
 .game {
@@ -49,10 +57,11 @@ strong {
     text-align:center;
     font-size:35px;
     cursor:pointer;
-    color:#333333;
     background-color:#FFFFFF;
     border-radius:3px;
 }
+
+
 
 .game .board .row:nth-child(3n + 1) .cell {
     margin-top:6px;
